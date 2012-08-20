@@ -6,6 +6,14 @@ import android.view.Menu;
 
 public class Redis extends Activity {
 
+
+	static {  
+	    System.loadLibrary("redis");  
+	} 
+	
+	private native void rstart();  
+
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

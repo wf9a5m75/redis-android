@@ -2452,6 +2452,8 @@ void memtest(size_t megabytes, int passes);
 
 #ifdef __ANDROID__
 void Java_it_rikiji_android_redis_Redis_start(JNIEnv * env, jobject this) {
+  int argc = 1;
+  char ** argv = NULL;
 #else
 int main(int argc, char **argv) {
 #endif
@@ -2540,7 +2542,11 @@ int main(int argc, char **argv) {
     aeSetBeforeSleepProc(server.el,beforeSleep);
     aeMain(server.el);
     aeDeleteEventLoop(server.el);
+#ifdef __ANDROID__
+    return;
+#else
     return 0;
+#endif
 }
 
 /* The End */
