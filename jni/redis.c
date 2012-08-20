@@ -2451,7 +2451,7 @@ void setupSignalHandlers(void) {
 void memtest(size_t megabytes, int passes);
 
 #ifdef __ANDROID__
-void Java_it_rikiji_android_redis_Redis_start(JNIEnv * env, jobject this) {
+void Java_it_rikiji_android_redis_Redis_rstart(JNIEnv * env, jobject this) {
   int argc = 1;
   char ** argv = NULL;
 #else

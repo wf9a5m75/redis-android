@@ -18,6 +18,15 @@ public class Redis extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_redis);
+        Thread thread = new Thread()
+		{
+		    @Override
+		    public void run() {
+		    	rstart();		        	
+		    }
+		};
+
+		thread.start();
     }
 
     @Override
