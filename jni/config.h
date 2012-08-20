@@ -25,8 +25,10 @@
 #endif
 
 /* Test for backtrace() */
+#ifndef  __ANDROID__
 #if defined(__APPLE__) || defined(__linux__) || defined(__sun)
 #define HAVE_BACKTRACE 1
+#endif
 #endif
 
 /* Test for polling API */
