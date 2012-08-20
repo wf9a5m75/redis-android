@@ -270,7 +270,11 @@ void redisLogRaw(int level, const char *msg) {
     if (!fp) return;
 
     if (rawmode) {
+#ifdef __ANDROID__
+        __android_log_print(ANDROID_LOG_DEBUG, DEBUG_TAG, "%s", msg);
+#else
         fprintf(fp,"%s",msg);
+#endif
     } else {
         int off;
         struct timeval tv;
@@ -278,7 +282,7 @@ void redisLogRaw(int level, const char *msg) {
         gettimeofday(&tv,NULL);
         off = strftime(buf,sizeof(buf),"%d %b %H:%M:%S.",localtime(&tv.tv_sec));
         snprintf(buf+off,sizeof(buf)-off,"%03d",(int)tv.tv_usec/1000);
-        fprintf(fp,"[%d] %s %c %s\n",(int)getpid(),buf,c[level],msg);
+	__android_log_print(ANDROID_LOG_DEBUG, DEBUG_TAG, "[%d] %s %c %s\n",(int)getpid(),buf,c[level],msg);
     }
     fflush(fp);
 
@@ -2446,7 +2450,11 @@ void setupSignalHandlers(void) {
 
 void memtest(size_t megabytes, int passes);
 
+#ifdef __ANDROID__
+void Java_it_rikiji_android_redis_Redis_start(JNIEnv * env, jobject this) {
+#else
 int main(int argc, char **argv) {
+#endif
     long long start;
     struct timeval tv;
 

@@ -1136,3 +1136,9 @@ void disableWatchdog(void);
 void watchdogScheduleSignal(int period);
 void redisLogHexDump(int level, char *descr, void *value, size_t len);
 #endif
+
+#ifdef __ANDROID__
+#include <jni.h>
+#include <android/log.h>
+#define DEBUG_TAG "redis:"
+#endif
