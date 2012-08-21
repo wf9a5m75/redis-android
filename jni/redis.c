@@ -1109,7 +1109,11 @@ void initServerConfig() {
     server.aof_fd = -1;
     server.aof_selected_db = -1; /* Make sure the first time will not match */
     server.aof_flush_postponed_start = 0;
+#ifdef __ANDROID__
+    server.pidfile = zstrdup("redis.pid");
+#else
     server.pidfile = zstrdup("/var/run/redis.pid");
+#endif
     server.rdb_filename = zstrdup("dump.rdb");
     server.aof_filename = zstrdup("appendonly.aof");
     server.requirepass = NULL;
@@ -2451,9 +2455,10 @@ void setupSignalHandlers(void) {
 void memtest(size_t megabytes, int passes);
 
 #ifdef __ANDROID__
-void Java_it_rikiji_android_redis_Redis_rstart(JNIEnv * env, jobject this) {
-  int argc = 1;
-  char ** argv = NULL;
+void Java_it_rikiji_android_redis_RedisService_rstart(JNIEnv * env, jobject this) {
+  int argc = 3;
+  char * argv[] = {"redis","--dir", "/sdcard/redis/"};
+  mkdir("/sdcard/redis",777);
 #else
 int main(int argc, char **argv) {
 #endif

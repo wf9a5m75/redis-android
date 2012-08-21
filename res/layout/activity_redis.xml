@@ -3,12 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
+    <ToggleButton
+        android:id="@+id/toggleButton1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="@string/hello_world"
-        tools:context=".Redis" />
+        android:text="ToggleButton"
+        android:onClick="onToggleClicked"/>
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/toggleButton1"
+        android:layout_alignRight="@+id/toggleButton1"
+        android:layout_below="@+id/toggleButton1"
+        android:layout_marginTop="26dp"
+        android:onClick="onClick"
+        android:text="test" />
+
+/>
 
 </RelativeLayout>

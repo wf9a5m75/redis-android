@@ -1140,5 +1140,5 @@ void redisLogHexDump(int level, char *descr, void *value, size_t len);
 #ifdef __ANDROID__
 #include <jni.h>
 #include <android/log.h>
-#define DEBUG_TAG "redis:"
+#define DEBUG_TAG "RedisNative"
 #endif
