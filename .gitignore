@@ -4,3 +4,8 @@ bin/*
 gen/*
 obj/*
 libs/armeabi/*
+.gradle
+.idea
+app/build/*
+app/src/main/jni/redis-3.2.5
+app/src/main/obj/

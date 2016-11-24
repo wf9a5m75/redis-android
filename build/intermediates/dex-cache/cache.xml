@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="/Users/masashi/.gradle/caches/modules-2/files-2.1/redis.clients/jedis/2.9.0/292bc9cc26553acd3cccc26f2f95620bf88a04c2/jedis-2.9.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="292bc9cc26553acd3cccc26f2f95620bf88a04c2">
+        <dex dex="/Users/masashi/Documents/workspace/redis-android/app/build/intermediates/pre-dexed/debug/jedis-2.9.0_b22c8de7f0a41bb97295c91c4025d87e36260890.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/android-sdk/extras/android/m2repository/com/android/support/support-v4/18.0.0/support-v4-18.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="44ec51e9d395a47aab135e5e1b556c0007442156">
+        <dex dex="/Users/masashi/Documents/workspace/redis-android-master/app/build/intermediates/pre-dexed/debug/support-v4-18.0.0_86da2a59aecc952bd3e584822017e053f3709af0.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/masashi/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-pool2/2.4.2/e5f4f28f19d57716fbc3989d7a357ebf1e454fea/commons-pool2-2.4.2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="e5f4f28f19d57716fbc3989d7a357ebf1e454fea">
+        <dex dex="/Users/masashi/Documents/workspace/redis-android/app/build/intermediates/pre-dexed/debug/commons-pool2-2.4.2_88b3336839d5c57365a7bb0e696975f8d4f73851.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/android-sdk/extras/android/m2repository/com/android/support/support-annotations/22.0.0/support-annotations-22.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="685d0b2c590447e85284ed84712cb363ba04eff8">
+        <dex dex="/Users/masashi/Documents/workspace/redis-android/app/build/intermediates/pre-dexed/debug/support-annotations-22.0.0_34aa9fcd685a17270414f9db567a7c70e4a0aad3.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/masashi/Documents/workspace/redis-android/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="4e86306289ace4aa0cfec44a05ed2b410d36989d">
+        <dex dex="/Users/masashi/Documents/workspace/redis-android/app/build/intermediates/pre-dexed/debug/com.android.support-support-v4-22.0.0_455446b3ae3836ff4c5c663e924c63693bc19e3e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/masashi/Documents/workspace/redis-android-master/app/libs/jedis-2.1.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="dd408109671d433d22dbcad2bd107cf0259812a0">
+        <dex dex="/Users/masashi/Documents/workspace/redis-android-master/app/build/intermediates/pre-dexed/debug/jedis-2.1.0_7efcf231a5d567b3a3fc4d220a4827c07c328822.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/masashi/Documents/workspace/redis-android/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/jars/libs/internal_impl-22.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="b5b92f469d515a13d778900f6d50c03d12f35504">
+        <dex dex="/Users/masashi/Documents/workspace/redis-android/app/build/intermediates/pre-dexed/debug/internal_impl-22.0.0_f73beb892b81db12304b725c236adc0b66a2eadf.jar" />
+    </item>
+
+</items>
