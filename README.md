@@ -18,14 +18,16 @@ The current redis version is 2.5.12.
 
 ## How to use this?
 
-Install the apk file from [here](), then launch the redis-android
+Install the apk file from [here](https://github.com/wf9a5m75/redis-android/blob/master/release/app-debug.apk?raw=true), then launch the redis-android app.
+
+After that, connect to the redis db from your pc.
 
 ```
 $> redis-cli -h (your android ip)
 
 $> set Hello myMessage
 
-$> get
-myMessage
+$> get Hello
+"myMessage"
 ```
 
