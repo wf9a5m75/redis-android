@@ -4,26 +4,25 @@ This project is forked from [rikiji/redis-android](https://github.com/rikiji/red
 
 ## Description
 
-This app works as [Redis Database](http://redis.io/) on Android.
+This app runs the [Redis Database](http://redis.io/) on Android.
+This is still experimental version. (Don't claim please.)
 
-The original author of this app does not maintain his repo.
-
-I just fixed a little the app and create the UI.
+You can run the DB tap on the toggle button.
+If you toggles off the button, the database is shutdown (also the app is killed).
 
 ## Redis version
 
-This project has just started, so the most of code keep original.
+The current redis version is 3.2.5.
 
-The current redis version is 2.5.12.
+![](images/capture.png)
 
 ## How to use this?
 
 Install the apk file from [here](https://github.com/wf9a5m75/redis-android/blob/master/release/app-debug.apk?raw=true), then launch the redis-android app.
-
-After that, connect to the redis db from your pc.
+After that, connect to your Android from your pc.
 
 ```
-$> redis-cli -h (your android ip)
+$> redis-cli -h 192.168.3.15  <--your Android ip
 
 $> set Hello myMessage
 
@@ -31,3 +30,10 @@ $> get Hello
 "myMessage"
 ```
 
+### Quick Q&A
+
+- Clustering?
+-- Not yet.
+
+- Protection mode?
+-- Disabled at this time.

@@ -5,11 +5,20 @@
 #ifndef REDIS_ANDROID_H
 #define REDIS_ANDROID_H
 
+#define MY_APP_LOG_TAG "redis"
+
+#define LOGW(...) __android_log_print(ANDROID_LOG_WARN, MY_APP_LOG_TAG, __VA_ARGS__)
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, MY_APP_LOG_TAG, __VA_ARGS__)
+#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, MY_APP_LOG_TAG, __VA_ARGS__)
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, MY_APP_LOG_TAG, __VA_ARGS__)
+
+
 // Keep the application cache directory (working directory path)
 extern char * APP_CACHE_DIR;
 
 
 void redis_start(JNIEnv * env, jobject this, jstring j_appCacheDir); // defined in redis.c
+char* convertJStringToChar(JNIEnv* env, jstring j_string);
 
 // Register c++ functions to VM through JNI
 // http://kznote.blogspot.com/2013/01/androidnative.html
@@ -31,6 +40,5 @@ static JNINativeMethod method_table[] = {
 };
 
 JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved);
-char* convertJStringToChar(JNIEnv* env, jstring j_string);
 
 #endif
