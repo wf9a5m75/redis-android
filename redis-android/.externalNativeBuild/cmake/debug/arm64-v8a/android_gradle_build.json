@@ -1,0 +1,31 @@
+
+{
+	"buildFiles" : 
+	[
+		"/Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/CMakeLists.txt"
+	],
+	"cleanCommands" : 
+	[
+		"/android-sdk/cmake/3.6.4111459/bin/cmake --build /Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/.externalNativeBuild/cmake/debug/arm64-v8a --target clean"
+	],
+	"libraries" : 
+	{
+		"native-lib-Debug-arm64-v8a" : 
+		{
+			"abi" : "arm64-v8a",
+			"artifactName" : "native-lib",
+			"buildCommand" : "/android-sdk/cmake/3.6.4111459/bin/cmake --build /Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/.externalNativeBuild/cmake/debug/arm64-v8a --target native-lib",
+			"buildType" : "debug",
+			"output" : "/Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/build/intermediates/cmake/debug/obj/arm64-v8a/libnative-lib.so",
+			"toolchain" : "11330787591093123663"
+		}
+	},
+	"toolchains" : 
+	{
+		"11330787591093123663" : 
+		{
+			"cCompilerExecutable" : "/android-sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang",
+			"cppCompilerExecutable" : "/android-sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++"
+		}
+	}
+}

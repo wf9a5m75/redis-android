@@ -1,0 +1,3 @@
+/Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/.externalNativeBuild/cmake/debug/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/.externalNativeBuild/cmake/debug/arm64-v8a/CMakeFiles/rebuild_cache.dir
+/Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/.externalNativeBuild/cmake/debug/arm64-v8a/CMakeFiles/native-lib.dir

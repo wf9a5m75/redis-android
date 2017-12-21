@@ -1,0 +1,3 @@
+rm -f /Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/build/intermediates/ndkBuild/release/lib/arm64-v8a/*
+rm -f /Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/build/intermediates/ndkBuild/release/lib/arm64-v8a/gdbserver
+rm -f /Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/build/intermediates/ndkBuild/release/lib/arm64-v8a/gdb.setup

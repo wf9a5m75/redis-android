@@ -1,0 +1,11 @@
+{
+  "buildFiles": [
+    "/Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/src/main/jni/Android.mk",
+    "/Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/src/main/jni/Application.mk"
+  ],
+  "cleanCommands": [],
+  "libraries": {},
+  "toolchains": {},
+  "cFileExtensions": [],
+  "cppFileExtensions": []
+}

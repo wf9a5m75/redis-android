@@ -1,0 +1,9 @@
+rm -f /Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/build/intermediates/ndkBuild/debug/lib/arm64-v8a/*
+rm -f /Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/build/intermediates/ndkBuild/debug/lib/arm64-v8a/gdbserver
+rm -f /Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/build/intermediates/ndkBuild/debug/lib/arm64-v8a/gdb.setup
+mkdir -p /Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/build/intermediates/ndkBuild/debug/lib/arm64-v8a
+echo [arm64-v8a] "Gdbserver      ": "[aarch64-linux-android-4.9] /Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/build/intermediates/ndkBuild/debug/lib/arm64-v8a/gdbserver"
+install -p /android-sdk/ndk-bundle/prebuilt/android-arm64/gdbserver/gdbserver /Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/build/intermediates/ndkBuild/debug/lib/arm64-v8a/gdbserver
+echo [arm64-v8a] "Gdbsetup       ": "/Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/build/intermediates/ndkBuild/debug/lib/arm64-v8a/gdb.setup"
+echo "set solib-search-path /Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/build/intermediates/ndkBuild/debug/obj/local/arm64-v8a" > /Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/build/intermediates/ndkBuild/debug/lib/arm64-v8a/gdb.setup
+echo "directory /android-sdk/ndk-bundle/sysroot /android-sdk/ndk-bundle/sources/cxx-stl/stlport" >> /Users/masashi/Documents/workspace/redis-android/ExampleApp/redis-android/build/intermediates/ndkBuild/debug/lib/arm64-v8a/gdb.setup

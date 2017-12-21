@@ -1,0 +1,11 @@
+<resources>
+  <string name="app_name">Redis ExampleApp</string>
+  <string name="redis_cli_h_ipaddress_p_6379"><![CDATA[
+---------------------------------------\n
+  How to connect to the redis DB:\n
+---------------------------------------\n
+\n
+\n
+$> redis-cli -h (ip address of this android) -p 6379\n
+  ]]></string>
+</resources>
