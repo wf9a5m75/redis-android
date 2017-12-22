@@ -1,19 +1,22 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.0'
+    }
+}
+
 apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 15
+    buildToolsVersion "27.0.2"
 
     defaultConfig {
         minSdkVersion 15
         versionCode 1
         versionName "1.0"
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
     }
 
     sourceSets {
@@ -24,13 +27,17 @@ android {
     }
 }
 
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-}
 
 def repo = new File(rootDir, "repository");
-apply plugin: "maven"
+apply plugin: 'maven'
 
 uploadArchives {
-    repository
+    repositories {
+        mavenDeployer {
+            repository url: "file://${repo.absolutePath}"
+            pom.version = "1.0.0"
+            pom.groupId = "wf9a5m75.redis"
+            pom.artifactId = "redis-android"
+        }
+    }
 }
