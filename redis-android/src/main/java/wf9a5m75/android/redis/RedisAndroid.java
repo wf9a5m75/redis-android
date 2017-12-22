@@ -214,9 +214,12 @@ public class RedisAndroid  {
     if (configs.containsKey("dir")) {
       File dir = new File(configs.getString("dir") + "");
       if (!dir.exists()) {
-        dir.mkdirs();
+        if (!dir.mkdirs()) {
+          configs.remove("dir");
+        }
       }
-    } else {
+    }
+    if (!configs.containsKey("dir")) {
       File dir = new File(context.getCacheDir().getAbsolutePath() + "/redis/");
       configs.putString("dir", dir.getAbsolutePath());
     }
