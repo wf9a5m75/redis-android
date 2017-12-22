@@ -78,3 +78,28 @@ The details of settings are defined at the http://download.redis.io/redis-stable
 You need to use redis client libraries.
 
 https://redis.io/clients#java
+
+## How to connect to the Redis DB from adb shell?
+
+You need **ROOT** permission of your device.
+
+1. Download the pre-build-libs.zip file from here.
+
+https://github.com/wf9a5m75/redis-android/releases
+
+2. Extract it
+
+3. push the `redis-cli` file into your device.
+
+```
+$> adb push redis-cli /system/xbin/redis-cli
+
+$> adb shell chmod 0755 /system/xbin/redis-cli
+
+$> adb shell chown root.shell /system/xbin/redis-cli
+
+$> adb shell
+
+#> redis-cli
+
+```
