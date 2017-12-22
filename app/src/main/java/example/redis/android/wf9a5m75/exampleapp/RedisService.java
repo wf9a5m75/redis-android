@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import wf9a5m75.android.redis.RedisAndroid;
+import io.wf9a5m75.redis.RedisAndroid;
 
 public class RedisService extends IntentService {
 

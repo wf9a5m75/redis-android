@@ -9,7 +9,7 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
   if ((*vm)->GetEnv(vm, (void **) &env, JNI_VERSION_1_6) != JNI_OK) {
     return JNI_ERR;
   } else {
-    jclass clazz = (*env)->FindClass(env, "wf9a5m75/android/redis/RedisAndroid");
+    jclass clazz = (*env)->FindClass(env, "io/wf9a5m75/redis/RedisAndroid");
     if (clazz) {
       int method_table_size = sizeof(method_table) / sizeof(method_table[0]);
       jint ret = (*env)->RegisterNatives(env, clazz, method_table, method_table_size);
