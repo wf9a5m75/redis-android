@@ -6,86 +6,75 @@ You can store data, get it, pubsub, ... etc, you can manipulate as regular Redis
 This repository is forked from [rikiji/redis-android](https://github.com/rikiji/redis-android), because the original author [Riccardo](http://rikiji.it/2012/08/21/Redis-Android-NDK-port.html) does not work on this anymore.
 But thank you for your hard work, @rikiji
 
-## How to use this?
+## Redis version
 
-Download the pre-build libraries from this link.
-https://github.com/wf9a5m75/redis-android/releases
+Dec/21/2017  Redis 4.0.6
 
-### libredis.so (server)
+## Install
 
-Unzip it, then copy the `(arch)/libredis.so` into your `src/main/libs/(arch)`.
+In order to use this library, you need to add the below two lines into your `build.gradle` file.
 
+**build.gradle**
 ```
-app/src/main/libs/
-├── arm64-v8a
-│   └── libredis.so
-├── armeabi-v7a
-│   └── libredis.so
-├── x86
-│   └── libredis.so
-└── x86_64
-    └── libredis.so
+repositories {
+    maven { url "https://raw.githubusercontent.com/wf9a5m75/redis-android/master/repository/" }
+}
+
+dependencies {
+    compile 'io.wf9a5m75:redis-android:1.0.0'
+}
 ```
 
-Then in your code, you need to create a service like this.
+## How to use this in your app?
 
 ```java
-public class RedisService extends Service {
+import io.wf9a5m75.redis.RedisAndroid;
 
-  static {
-    System.loadLibrary("redis");
+public class MyService extends IntentService {
+
+  public MyService() {
+    super("MyService");
   }
 
-  private native void native_redisStart(String app_cache_dir);
+  @Nullable
+  @Override
+  public IBinder onBind(Intent intent) {
+    return null;
+  }
 
-  ...
+  @Override
+  protected void onHandleIntent(@Nullable Intent intent) {
 
-  public int onStartCommand(Intent intent, int flags, int startId) {
-    Log.d(TAG, "starting");
-    Thread thread = new Thread() {
-      @Override
-      public void run() {
-        String app_cache_dir = RedisService.this.getCacheDir().getAbsolutePath();
-        native_redisStart(app_cache_dir);
-      }
-    };
-    thread.start();
-    return 0;
+    Bundle configs = new Bundle();
+    configs.putString("port", "6379");   // <-- strongly recommend to change to different port number
+    configs.putString("protected-mode", "no");
+    configs.putString("requirepass", "");
+    RedisAndroid.start(this, configs);
   }
 }
 ```
 
-## How to use this
+## Redis settings
 
-This app runs the [Redis Database](http://redis.io/) on Android.
-This is still experimental version. (Don't claim please.)
+This library specifies default settings for Android in the [RedisAndroid.java](https://github.com/wf9a5m75/redis-android/blob/master/redis-android/src/main/java/io/wf9a5m75/redis/RedisAndroid.java).
 
-You can run the DB tap on the toggle button.
-If you toggles off the button, the database is shutdown (also the app is killed).
+You can overwrite these settings for your purpose.
 
-## Redis version
+For example, the default `maxmemory = 10mb`, but if you want to increase it,
 
-The current redis version is 4.0.6
-
-
-## How to use this?
-
-Install the apk file from [here](https://github.com/wf9a5m75/redis-android/blob/master/release/app-debug.apk?raw=true), then launch the redis-android app.
-After that, connect to your Android from your pc.
-
-```
-$> redis-cli -h 192.168.3.15  <--your Android ip
-
-$> set Hello myMessage
-
-$> get Hello
-"myMessage"
+```java
+Bundle configs = new Bundle();
+configs.putString("port", "6379");   // <-- strongly recommend to change to different port number
+configs.putString("maxmemory", "30mb");
+configs.putString("protected-mode", "no");
+configs.putString("requirepass", "");
+RedisAndroid.start(this, configs);
 ```
 
-### Quick Q&A
+The details of settings are defined at the http://download.redis.io/redis-stable/redis.conf
 
-- Clustering?
--- Not yet.
+## How to connect to the Redis DB from your app?
 
-- Protection mode?
--- Disabled at this time.
+You need to use redis client libraries.
+
+https://redis.io/clients#java
