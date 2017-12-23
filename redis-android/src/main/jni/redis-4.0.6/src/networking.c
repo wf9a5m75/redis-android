@@ -1100,7 +1100,10 @@ int processInlineBuffer(client *c) {
             sdsfree(argv[j]);
         }
     }
-    zfree(argv);
+
+#ifndef __ANDROID__
+    zfree(argv);    // This line causes error on the VSD231(2014 model) for some reasons
+#endif
     return C_OK;
 }
 

@@ -1,7 +1,7 @@
-# redis-android (server)
+# Redis on Android (server)
 
-This redis-android runs a redis server on Android.
-You can store data, get it, pubsub, ... etc, you can manipulate as regular Redis DB.
+This library allows you to run a Redis DB on Android devices.
+You can store data, get it, pubsub, ... etc, you can manipulate the DB like normal Redis.
 
 This repository is forked from [rikiji/redis-android](https://github.com/rikiji/redis-android), because the original author [Riccardo](http://rikiji.it/2012/08/21/Redis-Android-NDK-port.html) does not work on this anymore.
 But thank you for your hard work, @rikiji
@@ -92,6 +92,10 @@ https://github.com/wf9a5m75/redis-android/releases
 3. push the `redis-cli` file into your device.
 
 ```
+$> adb root
+
+$> adb remount // or adb shell 'mount -o rw,remount /system'
+
 $> adb push redis-cli /system/xbin/redis-cli
 
 $> adb shell chmod 0755 /system/xbin/redis-cli
@@ -103,3 +107,27 @@ $> adb shell
 #> redis-cli
 
 ```
+
+# Playing with Redis
+
+```
+redis-cli -h 192.168.86.23
+192.168.86.23:6379> ping
+PONG
+192.168.86.23:6379> set foo bar
+OK
+192.168.86.23:6379> get foo
+"bar"
+192.168.86.23:6379> incr mycounter
+(integer) 1
+192.168.86.23:6379> incr mycounter
+(integer) 2
+192.168.86.23:6379> keys *
+1) "mycounter"
+2) "foo"
+192.168.86.23:6379> get mycounter
+"2"
+192.168.86.23:6379>
+```
+
+![](https://github.com/wf9a5m75/redis-android/blob/master/images/playing.gif?raw=true)
