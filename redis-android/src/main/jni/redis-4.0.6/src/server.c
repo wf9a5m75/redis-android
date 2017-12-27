@@ -1074,6 +1074,9 @@ int serverCron(struct aeEventLoop *eventLoop, long long id, void *clientData) {
                     strerror(errno),
                     (int) server.rdb_child_pid,
                     (int) server.aof_child_pid);
+                #ifndef __ANDROID__
+                    server.rdb_child_pid = -1;
+                #endif
             } else if (pid == server.rdb_child_pid) {
                 backgroundSaveDoneHandler(exitcode,bysignal);
                 if (!bysignal && exitcode == 0) receiveChildInfo();
