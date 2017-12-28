@@ -1076,6 +1076,7 @@ int serverCron(struct aeEventLoop *eventLoop, long long id, void *clientData) {
                     (int) server.aof_child_pid);
                 #ifdef __ANDROID__
                     server.rdb_child_pid = -1;
+                    ldbKillForkedSessions();
                 #endif
             } else if (pid == server.rdb_child_pid) {
                 backgroundSaveDoneHandler(exitcode,bysignal);
