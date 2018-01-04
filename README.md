@@ -8,7 +8,7 @@ But thank you for your hard work, @rikiji
 
 ## Redis version
 
-Dec/21/2017  Redis 4.0.6
+Jan/03/2018  Redis 4.0.6
 
 ## Install
 
@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    compile 'io.wf9a5m75:redis-android:1.0.2'
+    compile 'io.wf9a5m75:redis-android:1.0.3'
 }
 ```
 
