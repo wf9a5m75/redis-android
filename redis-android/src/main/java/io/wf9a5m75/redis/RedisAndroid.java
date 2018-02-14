@@ -120,7 +120,7 @@ public class RedisAndroid  {
     configs.putString("appendfsync", "everysec");
     configs.putString("no-appendfsync-on-rewrite", "no");
     configs.putString("auto-aof-rewrite-percentage", "100");
-    configs.putString("auto-aof-rewrite-min-size", "64mb");
+    configs.putString("auto-aof-rewrite-min-size", "5mb");
     configs.putString("aof-load-truncated", "yes");
     configs.putString("aof-use-rdb-preamble", "no");
 

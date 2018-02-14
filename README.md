@@ -1,14 +1,48 @@
-# Redis on Android (server)
-
-This library allows you to run a Redis DB on Android devices.
-You can store data, get it, pubsub, ... etc, you can manipulate the DB like normal Redis.
-
-This repository is forked from [rikiji/redis-android](https://github.com/rikiji/redis-android), because the original author [Riccardo](http://rikiji.it/2012/08/21/Redis-Android-NDK-port.html) does not work on this anymore.
-But thank you for your hard work, @rikiji
+# RedisDB on Android (v1.0.4)
 
 ## Redis version
 
-Jan/03/2018  Redis 4.0.6
+Feb/13/2018  Redis 4.0.8
+
+## Description
+
+Redis is known for NoSQL database. You can run Redis database on your server.
+
+**_This library helps you to run Redis database on Android device_**.
+
+This library is just cross-compiled the [original redis database](https://redis.io/) for Android architectures such as ARM cpu.
+
+You can run Redis database in background thread in your application.
+
+
+
+## Benefit of running Redis DB on Android
+
+There are some benefits for running Redis DB on Android.
+
+  - NoSQL database in memory
+
+    The most remarkable feature of the Redis DB is `NoSQL`.
+    It means you can easily store data with key, and retrieve it (just like JSON object).
+
+  - No Internet is required
+
+    `MongoDB` or `Google Firebase` are known for NoSQL hosted on their cloud servers. However they need to connect to their server through the Internet.
+    It is depends on your purpose, but I wanted own hosted database on Android.
+
+  - `TTL` for key
+
+    One of my favorite points of Redis DB is you are able to set `TTL (time to live)`. You can save the key-value pairs that is available only in TTL time.
+
+  - `Publish/Subscriber`
+
+    One of the reason I created this library is Redis DB has `publisher/subscriber` mechanism, like a chat room.
+    You can notify your message from one application, and receive the data on another applications, even on multiple devices.
+
+  - No dependencies
+
+    One of the reason I gave up to use `Google Firebase` is that the library requires `Google Play Services`. But my Android does not have it (AOSP rom).
+    You can run Redis DB with **only this library.**
 
 ## Install
 
@@ -21,7 +55,7 @@ repositories {
 }
 
 dependencies {
-    compile 'io.wf9a5m75:redis-android:1.0.3'
+    compile 'io.wf9a5m75:redis-android:1.0.4'
 }
 ```
 
