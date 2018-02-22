@@ -837,7 +837,7 @@ void shutdownCommand(client *c) {
      * Also when in Sentinel mode clear the SAVE flag and force NOSAVE. */
     if (server.loading || server.sentinel_mode)
         flags = (flags & ~SHUTDOWN_SAVE) | SHUTDOWN_NOSAVE;
-#ifdef __ANDROID__
+#ifdef __REDIS_ANDROID__
     if (prepareForShutdown(flags) == C_OK) {
         c->flags |= CLIENT_CLOSE_AFTER_REPLY;
         addReply(c,shared.ok);

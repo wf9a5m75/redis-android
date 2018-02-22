@@ -33,8 +33,17 @@
 #include "bio.h"
 #include "latency.h"
 #include "atomicvar.h"
-#ifdef __ANDROID__
+#ifdef __REDIS_ANDROID__
     #include "../../redis-android.h"
+#else
+  #ifdef __ANDROID__
+    #include <jni.h>
+    #include <stdio.h>
+    #include <string.h>
+    #include <malloc.h>
+    #include <android/log.h>
+  #endif
+
 #endif
 
 #include <time.h>
@@ -3702,7 +3711,7 @@ int redisIsSupervised(int mode) {
 }
 
 
-#ifdef __ANDROID__
+#ifdef __REDIS_ANDROID__
 int redis_start(JNIEnv * env, jobject this, jstring j_configs) {
   int argc = 2;
 
@@ -3712,7 +3721,9 @@ int redis_start(JNIEnv * env, jobject this, jstring j_configs) {
 
   char * argv[] = {"redis-server", "-\0"};
   //mkdir("/sdcard/redis",777);
-#else
+#endif
+
+#ifndef __REDIS_ANDROID__
 int main(int argc, char **argv) {
 #endif
     struct timeval tv;
@@ -3848,7 +3859,7 @@ int main(int argc, char **argv) {
             #endif
         }
         resetServerSaveParams();
-#ifdef __ANDROID__
+#ifdef __REDIS_ANDROID__
         loadServerConfig(NULL, CONFIGS);
 #else
         loadServerConfig(configfile,options);

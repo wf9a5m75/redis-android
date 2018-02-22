@@ -1,8 +1,8 @@
-# RedisDB on Android (v1.0.4)
+# RedisDB on Android (v1.0.5)
 
 ## Redis version
 
-Feb/13/2018  Redis 4.0.8
+Feb/21/2018  Redis 4.0.8
 
 ## Description
 
@@ -55,7 +55,7 @@ repositories {
 }
 
 dependencies {
-    compile 'io.wf9a5m75:redis-android:1.0.4'
+    compile 'io.wf9a5m75:redis-android:1.0.5'
 }
 ```
 
@@ -113,9 +113,12 @@ You need to use redis client libraries.
 
 https://redis.io/clients#java
 
-## How to connect to the Redis DB from adb shell?
+## redis-cli command
 
-You need **ROOT** permission of your device.
+You need to install the command by your hand.
+You may need **ROOT** permission of your device.
+
+(`redis-check-aof`, `redis-check-rdb` commands are also the same steps)
 
 1. Download the pre-build-libs.zip file from here.
 
