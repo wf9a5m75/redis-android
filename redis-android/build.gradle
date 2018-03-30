@@ -1,9 +1,10 @@
 buildscript {
     repositories {
         mavenCentral()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:3.1.0'
     }
 }
 
@@ -11,7 +12,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 15
-    buildToolsVersion "27.0.2"
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         minSdkVersion 15
@@ -35,7 +36,7 @@ uploadArchives {
     repositories {
         mavenDeployer {
             repository url: "file://${repo.absolutePath}"
-            pom.version = "1.0.5"
+            pom.version = "1.0.6"
             pom.groupId = "io.wf9a5m75"
             pom.artifactId = "redis-android"
         }

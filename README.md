@@ -1,8 +1,8 @@
-# RedisDB on Android (v1.0.5)
+# RedisDB on Android (v1.0.9)
 
 ## Redis version
 
-Feb/21/2018  Redis 4.0.8
+Mar/30/2018  Redis 4.0.9
 
 ## Description
 

@@ -17,6 +17,7 @@
       </intent-filter>
     </activity>
     <service
+      android:process=":redisServer"
       android:name=".RedisService" />
   </application>
 
