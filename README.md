@@ -1,4 +1,4 @@
-# RedisDB on Android (v1.0.9)
+# RedisDB on Android
 
 ## Redis version
 
@@ -55,7 +55,7 @@ repositories {
 }
 
 dependencies {
-    compile 'io.wf9a5m75:redis-android:1.0.9'
+    compile 'io.wf9a5m75:redis-android:1.0.6'
 }
 ```
 
