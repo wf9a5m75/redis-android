@@ -55,7 +55,7 @@ repositories {
 }
 
 dependencies {
-    compile 'io.wf9a5m75:redis-android:1.0.5'
+    compile 'io.wf9a5m75:redis-android:1.0.9'
 }
 ```
 
