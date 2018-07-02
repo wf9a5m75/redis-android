@@ -19,7 +19,7 @@ RELEASE_HDR := $(shell sh -c '$(SRC)/mkreleasehdr.sh')
 LOCAL_MODULE    := redis
 
 REDIS_ANDROID := redis-android
-REDIS_DIR := redis-4.0.9
+REDIS_DIR := redis-4.0.10
 
 LOCAL_LDLIBS := -llog
 LOCAL_CFLAGS := -O3  -D__ANDROID__ -D__REDIS_ANDROID__
@@ -51,7 +51,7 @@ LOCAL_STATIC_LIBRARIES += lua
 LOCAL_STATIC_LIBRARIES += linenoise
 
 
-ifeq ($(REDIS_DIR),redis-4.0.9)
+ifeq ($(REDIS_DIR),redis-4.0.10)
 
   LOCAL_SRC_FILES += \
     $(SRC)/adlist.c $(SRC)/ae.c  \
@@ -88,8 +88,8 @@ include $(CLEAR_VARS)
 LOCAL_PATH := $(ORG_LOCAL_PATH)
 LOCAL_MODULE    := redis-check-rdb
 
-REDIS_ANDROID_DIR := redis-4.0.9
-REDIS_DIR := redis-4.0.9
+REDIS_ANDROID_DIR := redis-4.0.10
+REDIS_DIR := redis-4.0.10
 
 # Includes lua library
 LOCAL_STATIC_LIBRARIES += lua
@@ -116,7 +116,7 @@ LOCAL_CFLAGS += -funwind-tables
 
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../
 
-ifeq ($(REDIS_DIR),redis-4.0.9)
+ifeq ($(REDIS_DIR),redis-4.0.10)
 
   LOCAL_SRC_FILES += \
     $(SRC)/adlist.c $(SRC)/ae.c  \
@@ -152,8 +152,8 @@ include $(BUILD_EXECUTABLE)
 include $(CLEAR_VARS)
 LOCAL_MODULE    := redis-check-aof
 
-REDIS_ANDROID_DIR := redis-4.0.9
-REDIS_DIR := redis-4.0.9
+REDIS_ANDROID_DIR := redis-4.0.10
+REDIS_DIR := redis-4.0.10
 
 # Includes lua library
 LOCAL_STATIC_LIBRARIES += lua
@@ -180,7 +180,7 @@ LOCAL_CFLAGS += -funwind-tables
 
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../
 
-ifeq ($(REDIS_DIR),redis-4.0.9)
+ifeq ($(REDIS_DIR),redis-4.0.10)
 
 
   LOCAL_SRC_FILES += \
@@ -217,8 +217,8 @@ include $(BUILD_EXECUTABLE)
 include $(CLEAR_VARS)
 LOCAL_MODULE    := redis-cli
 
-REDIS_ANDROID_DIR := redis-4.0.9
-REDIS_DIR := redis-4.0.9
+REDIS_ANDROID_DIR := redis-4.0.10
+REDIS_DIR := redis-4.0.10
 
 
 # Includes linenoise library

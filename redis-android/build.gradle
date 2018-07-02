@@ -36,7 +36,7 @@ uploadArchives {
     repositories {
         mavenDeployer {
             repository url: "file://${repo.absolutePath}"
-            pom.version = "1.0.6"
+            pom.version = "1.0.7"
             pom.groupId = "io.wf9a5m75"
             pom.artifactId = "redis-android"
         }

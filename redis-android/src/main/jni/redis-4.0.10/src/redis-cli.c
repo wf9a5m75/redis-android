@@ -152,20 +152,25 @@ static long long mstime(void) {
 }
 
 static void cliRefreshPrompt(void) {
-    int len;
-
     if (config.eval_ldb) return;
-    if (config.hostsocket != NULL)
-        len = snprintf(config.prompt,sizeof(config.prompt),"redis %s",
-                       config.hostsocket);
-    else
-        len = anetFormatAddr(config.prompt, sizeof(config.prompt),
-                           config.hostip, config.hostport);
+
+    sds prompt = sdsempty();
+    if (config.hostsocket != NULL) {
+        prompt = sdscatfmt(prompt,"redis %s",config.hostsocket);
+    } else {
+        char addr[256];
+        anetFormatAddr(addr, sizeof(addr), config.hostip, config.hostport);
+        prompt = sdscatlen(prompt,addr,strlen(addr));
+    }
+
     /* Add [dbnum] if needed */
     if (config.dbnum != 0)
-        len += snprintf(config.prompt+len,sizeof(config.prompt)-len,"[%d]",
-            config.dbnum);
-    snprintf(config.prompt+len,sizeof(config.prompt)-len,"> ");
+        prompt = sdscatfmt(prompt,"[%i]",config.dbnum);
+
+    /* Copy the prompt in the static buffer. */
+    prompt = sdscatlen(prompt,"> ",2);
+    snprintf(config.prompt,sizeof(config.prompt),"%s",prompt);
+    sdsfree(prompt);
 }
 
 /* Return the name of the dotfile for the specified 'dotfilename'.
@@ -917,7 +922,7 @@ static int cliReadReply(int output_raw_strings) {
     return REDIS_OK;
 }
 
-static int cliSendCommand(int argc, char **argv, int repeat) {
+static int cliSendCommand(int argc, char **argv, long repeat) {
     char *command = argv[0];
     size_t *argvlen;
     int j, output_raw;
@@ -980,7 +985,7 @@ static int cliSendCommand(int argc, char **argv, int repeat) {
     for (j = 0; j < argc; j++)
         argvlen[j] = sdslen(argv[j]);
 
-    while(repeat--) {
+    while(repeat-- > 0) {
         redisAppendCommandArgv(context,argc,(const char**)argv,argvlen);
         while (config.monitor_mode) {
             if (cliReadReply(output_raw) != REDIS_OK) exit(1);
@@ -1088,6 +1093,7 @@ static int parseOptions(int argc, char **argv) {
         } else if (!strcmp(argv[i],"-n") && !lastarg) {
             config.dbnum = atoi(argv[++i]);
         } else if (!strcmp(argv[i],"-a") && !lastarg) {
+            fputs("Warning: Using a password with '-a' option on the command line interface may not be safe.\n", stderr);
             config.auth = argv[++i];
         } else if (!strcmp(argv[i],"-u") && !lastarg) {
             parseRedisUri(argv[++i]);
@@ -1397,9 +1403,35 @@ static void repl(void) {
     cliRefreshPrompt();
     while((line = linenoise(context ? config.prompt : "not connected> ")) != NULL) {
         if (line[0] != '\0') {
+            long repeat = 1;
+            int skipargs = 0;
+            char *endptr = NULL;
+
             argv = cliSplitArgs(line,&argc);
-            if (history) linenoiseHistoryAdd(line);
-            if (historyfile) linenoiseHistorySave(historyfile);
+
+            /* check if we have a repeat command option and
+             * need to skip the first arg */
+            if (argv && argc > 0) {
+                errno = 0;
+                repeat = strtol(argv[0], &endptr, 10);
+                if (argc > 1 && *endptr == '\0') {
+                    if (errno == ERANGE || errno == EINVAL || repeat <= 0) {
+                        fputs("Invalid redis-cli repeat command option value.\n", stdout);
+                        sdsfreesplitres(argv, argc);
+                        linenoiseFree(line);
+                        continue;
+                    }
+                    skipargs = 1;
+                } else {
+                    repeat = 1;
+                }
+            }
+
+            /* Won't save auth command in history file */
+            if (!(argv && argc > 0 && !strcasecmp(argv[0+skipargs], "auth"))) {
+                if (history) linenoiseHistoryAdd(line);
+                if (historyfile) linenoiseHistorySave(historyfile);
+            }
 
             if (argv == NULL) {
                 printf("Invalid argument(s)\n");
@@ -1412,6 +1444,8 @@ static void repl(void) {
                     exit(0);
                 } else if (argv[0][0] == ':') {
                     cliSetPreferences(argv,argc,1);
+                    sdsfreesplitres(argv,argc);
+                    linenoiseFree(line);
                     continue;
                 } else if (strcasecmp(argv[0],"restart") == 0) {
                     if (config.eval) {
@@ -1431,15 +1465,6 @@ static void repl(void) {
                     linenoiseClearScreen();
                 } else {
                     long long start_time = mstime(), elapsed;
-                    int repeat, skipargs = 0;
-                    char *endptr;
-
-                    repeat = strtol(argv[0], &endptr, 10);
-                    if (argc > 1 && *endptr == '\0' && repeat) {
-                        skipargs = 1;
-                    } else {
-                        repeat = 1;
-                    }
 
                     issueCommandRepeat(argc-skipargs, argv+skipargs, repeat);
 
