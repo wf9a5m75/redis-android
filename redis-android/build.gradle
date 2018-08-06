@@ -11,11 +11,11 @@ buildscript {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 15
+    compileSdkVersion 16
     buildToolsVersion '27.0.3'
 
     defaultConfig {
-        minSdkVersion 15
+        minSdkVersion 16
         versionCode 1
         versionName "1.0"
     }
@@ -36,7 +36,7 @@ uploadArchives {
     repositories {
         mavenDeployer {
             repository url: "file://${repo.absolutePath}"
-            pom.version = "1.0.7"
+            pom.version = "1.0.8"
             pom.groupId = "io.wf9a5m75"
             pom.artifactId = "redis-android"
         }

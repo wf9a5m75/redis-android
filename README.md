@@ -2,7 +2,7 @@
 
 ## Redis version
 
-Jul/2/2018  Redis 4.0.10
+Aug/6/2018  Redis 4.0.11
 
 ## Description
 
@@ -55,7 +55,7 @@ repositories {
 }
 
 dependencies {
-    compile 'io.wf9a5m75:redis-android:1.0.7'
+    compile 'io.wf9a5m75:redis-android:1.0.8'
 }
 ```
 

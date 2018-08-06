@@ -1281,6 +1281,7 @@ void readSyncBulkPayload(aeEventLoop *el, int fd, void *privdata, int mask) {
         close(server.repl_transfer_fd);
         replicationCreateMasterClient(server.repl_transfer_s,rsi.repl_stream_db);
         server.repl_state = REPL_STATE_CONNECTED;
+        server.repl_down_since = 0;
         /* After a full resynchroniziation we use the replication ID and
          * offset of the master. The secondary ID / offset are cleared since
          * we are starting a new history. */
@@ -1945,7 +1946,6 @@ void replicationSetMaster(char *ip, int port) {
      * our own parameters, to later PSYNC with the new master. */
     if (was_master) replicationCacheMasterUsingMyself();
     server.repl_state = REPL_STATE_CONNECT;
-    server.repl_down_since = 0;
 }
 
 /* Cancel replication, setting the instance as a master itself. */
@@ -2143,6 +2143,8 @@ void replicationCacheMaster(client *c) {
     server.master->read_reploff = server.master->reploff;
     if (c->flags & CLIENT_MULTI) discardTransaction(c);
     listEmpty(c->reply);
+    c->sentlen = 0;
+    c->reply_bytes = 0;
     c->bufpos = 0;
     resetClient(c);
 
@@ -2212,6 +2214,7 @@ void replicationResurrectCachedMaster(int newfd) {
     server.master->authenticated = 1;
     server.master->lastinteraction = server.unixtime;
     server.repl_state = REPL_STATE_CONNECTED;
+    server.repl_down_since = 0;
 
     /* Re-add to the list of clients. */
     listAddNodeTail(server.clients,server.master);
