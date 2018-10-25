@@ -2,7 +2,7 @@
 
 ## Redis version
 
-Aug/6/2018  Redis 4.0.11
+Oct/25/2018  ** Redis 5.0.0**
 
 ## Description
 
@@ -55,7 +55,7 @@ repositories {
 }
 
 dependencies {
-    compile 'io.wf9a5m75:redis-android:1.0.8'
+    compile 'io.wf9a5m75:redis-android:1.1.0'
 }
 ```
 
@@ -168,3 +168,14 @@ OK
 ```
 
 ![](https://github.com/wf9a5m75/redis-android/blob/master/images/playing.gif?raw=true)
+
+# Version compatibles
+
+| Redis version | redis-android version |
+|---------------|-----------------------|
+| Redis 5.0.0   | v1.1.0                |
+| Redis 4.0.11  | v1.0.8                |
+| Redis 4.0.10  | v1.0.7                |
+| Redis 4.0.9   | v1.0.6                |
+| Redis 4.0.8   | v1.0.4 - v1.0.5       |
+| Redis 4.0.6   | v1.0.0 - v1.0.3       |

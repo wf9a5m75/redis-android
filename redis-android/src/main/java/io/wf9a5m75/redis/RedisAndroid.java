@@ -72,20 +72,20 @@ public class RedisAndroid  {
     //-------------------
     // Replication
     //-------------------
-    //configs.putString("slaveof", "no one");
+    //configs.putString("replicaof", "no one");
     //configs.putString("masterauth", "");
-    configs.putString("slave-serve-stale-data", "yes");
-    configs.putString("slave-read-only", "yes");
+    configs.putString("replica-serve-stale-data", "yes");
+    configs.putString("replica-read-only", "yes");
     configs.putString("repl-diskless-sync", "no");
     configs.putString("repl-diskless-sync-delay", "5");
-//    configs.putString("repl-ping-slave-period", "10");
+//    configs.putString("repl-ping-replica-period", "10");
 //    configs.putString("repl-timeout", "60");
     configs.putString("repl-disable-tcp-nodelay", "no");
 //    configs.putString("repl-backlog-size", "1mb");
 //    configs.putString("repl-backlog-ttl", "3600");
-    configs.putString("slave-priority", "100");
-//    configs.putString("slave-announce-ip", "5.5.5.5");
-//    configs.putString("slave-announce-port", "1234");
+    configs.putString("replica-priority", "100");
+//    configs.putString("replica-announce-ip", "5.5.5.5");
+//    configs.putString("replica-announce-port", "1234");
 
     //-------------------
     // Security
@@ -110,7 +110,7 @@ public class RedisAndroid  {
     configs.putString("lazyfree-lazy-eviction", "no");
     configs.putString("lazyfree-lazy-expire", "no");
     configs.putString("lazyfree-lazy-server-del", "no");
-    configs.putString("slave-lazy-flush", "no");
+    configs.putString("replica-lazy-flush", "no");
 
     //-------------------
     // Append only mode
@@ -135,7 +135,7 @@ public class RedisAndroid  {
 //    configs.putString("cluster-enabled", "no");
 //    configs.putString("cluster-config-file", "nodes-" + hashCode + ".conf");
 //    configs.putString("cluster-node-timeout", "15000");
-//    configs.putString("cluster-slave-validity-factor", "10");
+//    configs.putString("cluster-replica-validity-factor", "10");
 //    configs.putString("cluster-migration-barrier", "1");
 //    configs.putString("cluster-require-full-coverage", "yes");
 
@@ -177,7 +177,7 @@ public class RedisAndroid  {
 
     ArrayList<String> clientOutputBufferLimits = new ArrayList<String>();
     clientOutputBufferLimits.add("normal 0 0 0");
-    clientOutputBufferLimits.add("slave 256mb 64mb 60");
+    clientOutputBufferLimits.add("replica 256mb 64mb 60");
     clientOutputBufferLimits.add("pubsub 32mb 8mb 60");
     configs.putStringArrayList("client-output-buffer-limit", clientOutputBufferLimits);
 
