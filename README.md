@@ -2,7 +2,7 @@
 
 ## Redis version
 
-Oct/25/2018  ** Redis 5.0.0**
+Oct/25/2018  **Redis 5.0.0**
 
 ## Description
 
