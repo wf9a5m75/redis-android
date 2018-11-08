@@ -1,13 +1,13 @@
-Redis on Android 1.0 release notes
+Redis on Android release notes
 ====================================
 
-## Redis on Android 1.1.0
-  - Released Aug/6/2018 9:43 PDT
-  - Upgrade Redis v5.0.0
+## Redis on Android 1.1.1
+  - Released Nov/8/2018 PST
+  - Upgrade Redis v5.0.1
 
-## Redis on Android 1.0.8
-  - Released Aug/6/2018 9:43 PDT
-  - Upgrade Redis 4.0.11
+## Redis on Android 1.1.0
+  - Released Oct/25/2018 PDT
+  - Upgrade Redis v5.0.0
 
 ## Redis on Android 1.0.8
   - Released Aug/6/2018 9:43 PDT

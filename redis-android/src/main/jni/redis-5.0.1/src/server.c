@@ -1537,10 +1537,10 @@ void initServerConfig(void) {
     server.runid[CONFIG_RUN_ID_SIZE] = '\0';
     changeReplicationId();
     clearReplicationId2();
-    server.timezone = timezone; /* Initialized by tzset(). */
+    server.timezone = getTimeZone(); /* Initialized by tzset(). */
     server.configfile = NULL;
     server.executable = NULL;
-    server.config_hz = CONFIG_DEFAULT_HZ;
+    server.hz = server.config_hz = CONFIG_DEFAULT_HZ;
     server.dynamic_hz = CONFIG_DEFAULT_DYNAMIC_HZ;
     server.arch_bits = (sizeof(long) == 8) ? 64 : 32;
     server.port = CONFIG_DEFAULT_SERVER_PORT;
@@ -2630,8 +2630,11 @@ int processCommand(client *c) {
         if (server.current_client == NULL) return C_ERR;
 
         /* It was impossible to free enough memory, and the command the client
-         * is trying to execute is denied during OOM conditions? Error. */
-        if ((c->cmd->flags & CMD_DENYOOM) && out_of_memory) {
+         * is trying to execute is denied during OOM conditions or the client
+         * is in MULTI/EXEC context? Error. */
+        if (out_of_memory &&
+            (c->cmd->flags & CMD_DENYOOM ||
+             (c->flags & CLIENT_MULTI && c->cmd->proc != execCommand))) {
             flagTransaction(c);
             addReply(c, shared.oomerr);
             return C_OK;

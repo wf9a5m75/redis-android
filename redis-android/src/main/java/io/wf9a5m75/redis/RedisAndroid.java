@@ -48,7 +48,7 @@ public class RedisAndroid  {
     configs.putString("pidfile", port + ".pid");
     configs.putString("loglevel", "notice");
     configs.putString("logfile", "");
-    configs.putString("syslog-enabled", "no");
+//    configs.putString("syslog-enabled", "no");
 //    configs.putString("syslog-ident", "redis");
 //    configs.putString("syslog-facility", "local0");
     configs.putString("databases", "16");
@@ -67,6 +67,7 @@ public class RedisAndroid  {
     configs.putString("rdbcompression", "yes");
     configs.putString("rdbchecksum", "yes");
     configs.putString("dbfilename", port + ".rdb");
+    configs.putString("dir", "./");
 
 
     //-------------------
@@ -93,7 +94,7 @@ public class RedisAndroid  {
     configs.putString("requirepass", packageName);
 
     //-------------------
-    // Security
+    // Clients
     //-------------------
     configs.putString("maxclients", "100");
 
@@ -103,6 +104,7 @@ public class RedisAndroid  {
     configs.putString("maxmemory", "10mb");
 //    configs.putString("maxmemory-policy", "noeviction");
 //    configs.putString("maxmemory-samples", "5");
+//    configs.putString("replica-ignore-maxmemory", "yes");
 
     //-------------------
     // Lazy freeing
@@ -115,14 +117,14 @@ public class RedisAndroid  {
     //-------------------
     // Append only mode
     //-------------------
-    configs.putString("appendonly", "yes");
+    configs.putString("appendonly", "no");
     configs.putString("appendfilename", port + ".aof");
     configs.putString("appendfsync", "everysec");
     configs.putString("no-appendfsync-on-rewrite", "no");
     configs.putString("auto-aof-rewrite-percentage", "100");
     configs.putString("auto-aof-rewrite-min-size", "5mb");
     configs.putString("aof-load-truncated", "yes");
-    configs.putString("aof-use-rdb-preamble", "no");
+    configs.putString("aof-use-rdb-preamble", "yes");
 
     //-------------------
     // Lua scripting
@@ -173,6 +175,9 @@ public class RedisAndroid  {
     configs.putString("zset-max-ziplist-entries", "128");
     configs.putString("zset-max-ziplist-value", "64");
     configs.putString("hll-sparse-max-bytes", "3000");
+    configs.putString("stream-node-max-bytes", "4096");
+    configs.putString("stream-node-max-entries", "100");
+    configs.putString("activerehashing", "yes");
     configs.putString("activerehashing", "yes");
 
     ArrayList<String> clientOutputBufferLimits = new ArrayList<String>();
@@ -180,8 +185,11 @@ public class RedisAndroid  {
     clientOutputBufferLimits.add("replica 256mb 64mb 60");
     clientOutputBufferLimits.add("pubsub 32mb 8mb 60");
     configs.putStringArrayList("client-output-buffer-limit", clientOutputBufferLimits);
+//    configs.putString("client-query-buffer-limit", "1gb");
+//    configs.putString("proto-max-bulk-len", "512mb");
 
     configs.putString("hz", "10");
+    configs.putString("dynamic-hz", "yes");
     configs.putString("aof-rewrite-incremental-fsync", "yes");
 //    configs.putString("lfu-log-factor", "10");
 //    configs.putString("lfu-decay-time", "1");
@@ -193,8 +201,9 @@ public class RedisAndroid  {
 //    configs.putString("active-defrag-ignore-bytes", "100mb");
 //    configs.putString("active-defrag-threshold-lower", "10");
 //    configs.putString("active-defrag-threshold-upper", "100");
-//    configs.putString("active-defrag-cycle-min", "25");
+//    configs.putString("active-defrag-cycle-min", "5");
 //    configs.putString("active-defrag-cycle-max", "75");
+//    configs.putString("active-defrag-max-scan-fields", "1000");
 
 
     StringBuilder stringBuilder = new StringBuilder();

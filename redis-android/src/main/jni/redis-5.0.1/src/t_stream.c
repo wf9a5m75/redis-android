@@ -847,11 +847,15 @@ void streamPropagateGroupID(client *c, robj *key, streamCG *group, robj *groupna
     decrRefCount(argv[4]);
 }
 
-/* Send the specified range to the client 'c'. The range the client will
- * receive is between start and end inclusive, if 'count' is non zero, no more
- * than 'count' elemnets are sent. The 'end' pointer can be NULL to mean that
- * we want all the elements from 'start' till the end of the stream. If 'rev'
- * is non zero, elements are produced in reversed order from end to start.
+/* Send the stream items in the specified range to the client 'c'. The range
+ * the client will receive is between start and end inclusive, if 'count' is
+ * non zero, no more than 'count' elements are sent.
+ *
+ * The 'end' pointer can be NULL to mean that we want all the elements from
+ * 'start' till the end of the stream. If 'rev' is non zero, elements are
+ * produced in reversed order from end to start.
+ *
+ * The function returns the number of entries emitted.
  *
  * If group and consumer are not NULL, the function performs additional work:
  * 1. It updates the last delivered ID in the group in case we are
@@ -1260,7 +1264,7 @@ void xrangeGenericCommand(client *c, int rev) {
     robj *o;
     stream *s;
     streamID startid, endid;
-    long long count = 0;
+    long long count = -1;
     robj *startarg = rev ? c->argv[3] : c->argv[2];
     robj *endarg = rev ? c->argv[2] : c->argv[3];
 
@@ -1287,7 +1291,13 @@ void xrangeGenericCommand(client *c, int rev) {
     if ((o = lookupKeyReadOrReply(c,c->argv[1],shared.emptymultibulk)) == NULL
         || checkType(c,o,OBJ_STREAM)) return;
     s = o->ptr;
-    streamReplyWithRange(c,s,&startid,&endid,count,rev,NULL,NULL,0,NULL);
+
+    if (count == 0) {
+        addReply(c,shared.nullmultibulk);
+    } else {
+        if (count == -1) count = 0;
+        streamReplyWithRange(c,s,&startid,&endid,count,rev,NULL,NULL,0,NULL);
+    }
 }
 
 /* XRANGE key start end [COUNT <n>] */
@@ -1815,7 +1825,9 @@ NULL
     }
 }
 
-/* Set the internal "last ID" of a stream. */
+/* XSETID <stream> <groupname> <id>
+ *
+ * Set the internal "last ID" of a stream. */
 void xsetidCommand(client *c) {
     robj *o = lookupKeyWriteOrReply(c,c->argv[1],shared.nokeyerr);
     if (o == NULL || checkType(c,o,OBJ_STREAM)) return;
@@ -1892,7 +1904,7 @@ void xackCommand(client *c) {
     addReplyLongLong(c,acknowledged);
 }
 
-/* XPENDING <key> <group> [<start> <stop> <count>] [<consumer>]
+/* XPENDING <key> <group> [<start> <stop> <count> [<consumer>]]
  *
  * If start and stop are omitted, the command just outputs information about
  * the amount of pending messages for the key/group pair, together with
@@ -1921,6 +1933,7 @@ void xpendingCommand(client *c) {
     if (c->argc >= 6) {
         if (getLongLongFromObjectOrReply(c,c->argv[5],&count,NULL) == C_ERR)
             return;
+        if (count < 0) count = 0;
         if (streamParseIDOrReply(c,c->argv[3],&startid,0) == C_ERR)
             return;
         if (streamParseIDOrReply(c,c->argv[4],&endid,UINT64_MAX) == C_ERR)
@@ -2146,7 +2159,7 @@ void xclaimCommand(client *c) {
 
     /* If we stopped because some IDs cannot be parsed, perhaps they
      * are trailing options. */
-    time_t now = mstime();
+    mstime_t now = mstime();
     streamID last_id = {0,0};
     int propagate_last_id = 0;
     for (; j < c->argc; j++) {
@@ -2265,8 +2278,9 @@ void xclaimCommand(client *c) {
             if (justid) {
                 addReplyStreamID(c,&id);
             } else {
-                streamReplyWithRange(c,o->ptr,&id,NULL,1,0,NULL,NULL,
-                                     STREAM_RWR_RAWENTRIES,NULL);
+                size_t emitted = streamReplyWithRange(c,o->ptr,&id,&id,1,0,
+                                    NULL,NULL,STREAM_RWR_RAWENTRIES,NULL);
+                if (!emitted) addReply(c,shared.nullbulk);
             }
             arraylen++;
 

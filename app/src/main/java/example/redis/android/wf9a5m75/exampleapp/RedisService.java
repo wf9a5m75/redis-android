@@ -25,7 +25,7 @@ public class RedisService extends IntentService {
   protected void onHandleIntent(@Nullable Intent intent) {
 
     Bundle configs = new Bundle();
-    configs.putString("protected-mode", "no");
+    configs.putString("protected-mode", "no");  // "no" for demo or development
     configs.putString("requirepass", "");
     configs.putString("loglevel", "verbose");
     RedisAndroid.start(this, configs);
