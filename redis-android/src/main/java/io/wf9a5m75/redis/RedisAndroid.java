@@ -67,7 +67,7 @@ public class RedisAndroid  {
     configs.putString("rdbcompression", "yes");
     configs.putString("rdbchecksum", "yes");
     configs.putString("dbfilename", port + ".rdb");
-    configs.putString("dir", "./");
+//    configs.putString("dir", "./");  <-- Don't set here. The value is specified later in this file.
 
 
     //-------------------
@@ -117,7 +117,7 @@ public class RedisAndroid  {
     //-------------------
     // Append only mode
     //-------------------
-    configs.putString("appendonly", "no");
+    configs.putString("appendonly", "yes");  // <--- Should be "yes" by default
     configs.putString("appendfilename", port + ".aof");
     configs.putString("appendfsync", "everysec");
     configs.putString("no-appendfsync-on-rewrite", "no");

@@ -173,7 +173,7 @@ OK
 
 | Redis version | redis-android version |
 |---------------|-----------------------|
-| Redis 5.0.1   | v1.1.1                |
+| Redis 5.0.1   | v1.1.1 - v1.1.2       |
 | Redis 5.0.0   | v1.1.0                |
 | Redis 4.0.11  | v1.0.8                |
 | Redis 4.0.10  | v1.0.7                |

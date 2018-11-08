@@ -1,6 +1,10 @@
 Redis on Android release notes
 ====================================
 
+## Redis on Android 1.1.2
+  - Released Nov/8/2018 PST
+  - Bug fix: default value of "dir" setting are incorrect
+ 
 ## Redis on Android 1.1.1
   - Released Nov/8/2018 PST
   - Upgrade Redis v5.0.1
