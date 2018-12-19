@@ -2,7 +2,7 @@
 
 ## Redis version
 
-Nov/26/2018  **Redis 5.0.2**
+Dec/18/2018  **Redis 5.0.3**
 
 ## Description
 
@@ -55,7 +55,7 @@ repositories {
 }
 
 dependencies {
-    compile 'io.wf9a5m75:redis-android:1.1.3'
+    compile 'io.wf9a5m75:redis-android:1.1.4'
 }
 ```
 
@@ -173,6 +173,7 @@ OK
 
 | Redis version | redis-android version |
 |---------------|-----------------------|
+| Redis 5.0.3   | v1.1.4                |
 | Redis 5.0.2   | v1.1.3                |
 | Redis 5.0.1   | v1.1.1 - v1.1.2       |
 | Redis 5.0.0   | v1.1.0                |
