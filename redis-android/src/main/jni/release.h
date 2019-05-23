@@ -1,3 +1,3 @@
-#define REDIS_GIT_SHA1 "8f662e2b"
-#define REDIS_GIT_DIRTY "     221"
-#define REDIS_BUILD_ID "masashis-mini.lan-1558635701"
+#define REDIS_GIT_SHA1 "4d32c09f"
+#define REDIS_GIT_DIRTY "     119"
+#define REDIS_BUILD_ID "masashis-mini.lan-1558640219"
