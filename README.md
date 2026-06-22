@@ -1,186 +1,172 @@
-# RedisDB on Android
+# Redis Android
 
-## Redis version
+Redis server embedded as an Android library.
 
-May/23/2019  **Redis 5.0.5**
+## Versions
 
-## Description
+- redis-android: 1.2.0
+- Redis: 8.8.0
+- Hiredis: 1.4.0
+- Minimum Android API: 21
+- Java: 17
 
-Redis is known for NoSQL database. You can run Redis database on your server.
+The AAR contains native libraries for:
 
-**_This library helps you to run Redis database on Android device_**.
+- `arm64-v8a`
+- `armeabi-v7a`
+- `x86`
+- `x86_64`
 
-This library is just cross-compiled the [original redis database](https://redis.io/) for Android architectures such as ARM cpu.
+## Features
 
-You can run Redis database in background thread in your application.
+- Runs a Redis server inside an Android application
+- Works without an Internet connection
+- Supports Redis persistence, TTL, Pub/Sub, Lua scripting, and Redis Functions
+- Includes Redis 8 Vector Set commands such as `VADD`, `VSIM`, `VCARD`, and `VDIM`
+- Does not require Google Play services
 
+The native Redis process has been adapted for Android so shutdown does not terminate
+the hosting application process.
 
+## Installation
 
-## Benefit of running Redis DB on Android
+The library is published to Maven Central:
 
-There are some benefits for running Redis DB on Android.
-
-  - NoSQL database in memory
-
-    The most remarkable feature of the Redis DB is `NoSQL`.
-    It means you can easily store data with key, and retrieve it (just like JSON object).
-
-  - No Internet is required
-
-    `MongoDB` or `Google Firebase` are known for NoSQL hosted on their cloud servers. However they need to connect to their server through the Internet.
-    It is depends on your purpose, but I wanted own hosted database on Android.
-
-  - `TTL` for key
-
-    One of my favorite points of Redis DB is you are able to set `TTL (time to live)`. You can save the key-value pairs that is available only in TTL time.
-
-  - `Publish/Subscriber`
-
-    One of the reason I created this library is Redis DB has `publisher/subscriber` mechanism, like a chat room.
-    You can notify your message from one application, and receive the data on another applications, even on multiple devices.
-
-  - No dependencies
-
-    One of the reason I gave up to use `Google Firebase` is that the library requires `Google Play Services`. But my Android does not have it (AOSP rom).
-    You can run Redis DB with **only this library.**
-
-## Install
-
-In order to use this library, you need to add the below two lines into your `build.gradle` file.
-
-**build.gradle**
-```
-repositories {
-    maven { url "https://raw.githubusercontent.com/wf9a5m75/redis-android/master/repository/" }
-}
-
+```groovy
 dependencies {
-    compile 'io.wf9a5m75:redis-android:1.1.6'
+    implementation 'io.github.wf9a5m75:redis-android:1.2.0'
 }
 ```
 
-## How to use this in your app?
+For Kotlin DSL:
 
-```java
-import io.wf9a5m75.redis.RedisAndroid;
-
-public class MyService extends IntentService {
-
-  public MyService() {
-    super("MyService");
-  }
-
-  @Nullable
-  @Override
-  public IBinder onBind(Intent intent) {
-    return null;
-  }
-
-  @Override
-  protected void onHandleIntent(@Nullable Intent intent) {
-
-    Bundle configs = new Bundle();
-    configs.putString("port", "6379");   // <-- strongly recommend to change to different port number
-    configs.putString("protected-mode", "no");
-    configs.putString("requirepass", "");
-    RedisAndroid.start(this, configs);
-  }
+```kotlin
+dependencies {
+    implementation("io.github.wf9a5m75:redis-android:1.2.0")
 }
 ```
 
-## Redis settings
+## Usage
 
-This library specifies default settings for Android in the [RedisAndroid.java](https://github.com/wf9a5m75/redis-android/blob/master/redis-android/src/main/java/io/wf9a5m75/redis/RedisAndroid.java).
-
-You can overwrite these settings for your purpose.
-
-For example, the default `maxmemory = 10mb`, but if you want to increase it,
+Start Redis from a background service or another dedicated background thread. The
+call blocks while the Redis event loop is running.
 
 ```java
-Bundle configs = new Bundle();
-configs.putString("port", "6379");   // <-- strongly recommend to change to different port number
-configs.putString("maxmemory", "30mb");
-configs.putString("protected-mode", "no");
-configs.putString("requirepass", "");
-RedisAndroid.start(this, configs);
+import android.app.IntentService;
+import android.content.Intent;
+import android.os.Bundle;
+
+import io.github.wf9a5m75.RedisAndroid;
+
+public class RedisService extends IntentService {
+    public RedisService() {
+        super("RedisService");
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        Bundle options = new Bundle();
+        options.putString("port", "6379");
+        options.putString("protected-mode", "yes");
+        options.putString("requirepass", "replace-with-a-strong-password");
+
+        RedisAndroid.start(this, options);
+    }
+}
 ```
 
-The details of settings are defined at the http://download.redis.io/redis-stable/redis.conf
+Do not call `RedisAndroid.start(...)` on the Android main thread.
 
-## How to connect to the Redis DB from your app?
+## Configuration
 
-You need to use redis client libraries.
+`RedisAndroid` provides Android-oriented defaults and accepts Redis configuration
+directives through an Android `Bundle`:
 
-https://redis.io/clients#java
+```java
+Bundle options = new Bundle();
+options.putString("port", "6380");
+options.putString("maxmemory", "30mb");
+options.putString("appendonly", "yes");
+options.putString("requirepass", "replace-with-a-strong-password");
 
-## redis-cli command
-
-You need to install the command by your hand.
-You may need **ROOT** permission of your device.
-
-(`redis-check-aof`, `redis-check-rdb` commands are also the same steps)
-
-1. Download the pre-build-libs.zip file from here.
-
-https://github.com/wf9a5m75/redis-android/releases
-
-2. Extract it
-
-3. push the `redis-cli` file into your device.
-
-```
-$> adb root
-
-$> adb remount // or adb shell 'mount -o rw,remount /system'
-
-$> adb push redis-cli /system/xbin/redis-cli
-
-$> adb shell chmod 0755 /system/xbin/redis-cli
-
-$> adb shell chown root.shell /system/xbin/redis-cli
-
-$> adb shell
-
-#> redis-cli
-
+RedisAndroid.start(context, options);
 ```
 
-# Playing with Redis
+Multiple-value directives can be supplied as an `ArrayList<String>`:
 
-```
-redis-cli -h 192.168.86.23
-192.168.86.23:6379> ping
-PONG
-192.168.86.23:6379> set foo bar
-OK
-192.168.86.23:6379> get foo
-"bar"
-192.168.86.23:6379> incr mycounter
-(integer) 1
-192.168.86.23:6379> incr mycounter
-(integer) 2
-192.168.86.23:6379> keys *
-1) "mycounter"
-2) "foo"
-192.168.86.23:6379> get mycounter
-"2"
-192.168.86.23:6379>
+```java
+ArrayList<String> save = new ArrayList<>();
+save.add("900 1");
+save.add("300 10");
+options.putStringArrayList("save", save);
 ```
 
-![](https://github.com/wf9a5m75/redis-android/blob/master/images/playing.gif?raw=true)
+See the [Redis configuration documentation](https://redis.io/docs/latest/operate/oss_and_stack/management/config/)
+and the current
+[`RedisAndroid.java`](redis-android/src/main/java/io/github/wf9a5m75/RedisAndroid.java)
+defaults.
 
-# Version compatibles
+## Security
+
+The embedded server opens a TCP socket. Keep `protected-mode` enabled, configure
+authentication, and restrict network exposure unless remote access is explicitly
+required.
+
+The sample application disables protected mode and authentication for demonstration
+only. Do not use those settings in production.
+
+## Connecting
+
+Use any Redis-compatible Java or Android client and connect to the configured host
+and port. See the [Redis client list](https://redis.io/docs/latest/develop/clients/).
+
+This project builds only the embedded `libredis.so`. It does not currently publish
+Android binaries for `redis-cli`, `redis-check-aof`, or `redis-check-rdb`.
+
+## Building
+
+Install Android SDK Platform 37 and Android NDK `30.0.14904198`, then run:
+
+```bash
+./gradlew buildNative
+./gradlew assembleDebug
+```
+
+The Android Gradle Plugin runs `ndk-build` through `externalNativeBuild`. Native
+outputs are stored in Gradle build directories and packaged into the AAR
+automatically. Publishing tasks also build the native libraries before publishing.
+
+## Publishing
+
+The root project provides these tasks:
+
+```bash
+./gradlew publishAllLocal
+./gradlew publishAllToGitHub
+./gradlew submitAllToMavenCentral
+```
+
+Maven Central submissions use Central Portal's user-managed mode. The workflow
+uploads and validates a deployment but does not publish it automatically.
+
+## Compatibility
 
 | Redis version | redis-android version |
-|---------------|-----------------------|
-| Redis 5.0.5   | v1.1.6                |
-| Redis 5.0.4   | v1.1.5                |
-| Redis 5.0.3   | v1.1.4                |
-| Redis 5.0.2   | v1.1.3                |
-| Redis 5.0.1   | v1.1.1 - v1.1.2       |
-| Redis 5.0.0   | v1.1.0                |
-| Redis 4.0.11  | v1.0.8                |
-| Redis 4.0.10  | v1.0.7                |
-| Redis 4.0.9   | v1.0.6                |
-| Redis 4.0.8   | v1.0.4 - v1.0.5       |
-| Redis 4.0.6   | v1.0.0 - v1.0.3       |
+|---|---|
+| Redis 8.8.0 | 1.2.0 |
+| Redis 5.0.5 | 1.1.6 |
+| Redis 5.0.4 | 1.1.5 |
+| Redis 5.0.3 | 1.1.4 |
+| Redis 5.0.2 | 1.1.3 |
+| Redis 5.0.1 | 1.1.1 - 1.1.2 |
+| Redis 5.0.0 | 1.1.0 |
+| Redis 4.0.11 | 1.0.8 |
+| Redis 4.0.10 | 1.0.7 |
+| Redis 4.0.9 | 1.0.6 |
+| Redis 4.0.8 | 1.0.4 - 1.0.5 |
+| Redis 4.0.6 | 1.0.0 - 1.0.3 |
+
+## License
+
+See [LICENSE.txt](LICENSE.txt). Redis and bundled third-party components retain
+their respective licenses.

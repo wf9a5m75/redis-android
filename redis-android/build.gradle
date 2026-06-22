@@ -1,44 +1,135 @@
 buildscript {
     repositories {
-        mavenCentral()
         google()
+        mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.1'
+        classpath 'com.android.tools.build:gradle:9.2.1'
     }
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+apply plugin: 'com.gradleup.nmcp'
+
+def libraryProperties = new Properties()
+file('gradle.properties').withInputStream { libraryProperties.load(it) }
+def libraryProperty = { String name ->
+    def override = findProperty(name)
+    override != null ? override.toString() : libraryProperties.getProperty(name)
+}
+def libraryGroupId = libraryProperty('libraryGroupId')
+def libraryArtifactId = libraryProperty('libraryArtifactId')
+def libraryVersion = libraryProperty('libraryVersion')
+def androidNdkVersion = rootProject.findProperty('android.ndkVersion') ?: '30.0.14904198'
+
+group = libraryGroupId
+version = libraryVersion
 
 android {
-    compileSdkVersion 16
-    buildToolsVersion '28.0.3'
+    namespace = 'io.github.wf9a5m75'
+    compileSdk = libraryProperty('compileSdk').toInteger()
+    ndkVersion = androidNdkVersion
 
     defaultConfig {
-        minSdkVersion 16
-        versionCode 1
-        versionName "1.0"
+        minSdk = libraryProperty('minSdk').toInteger()
+        ndk {
+            abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'
+        }
     }
 
-    sourceSets {
-        main {
-            jni.srcDirs = []
-            jniLibs.srcDir "src/main/libs"
+    compileOptions {
+        def javaVersion = JavaVersion.toVersion(libraryProperty('javaVersion'))
+        sourceCompatibility javaVersion
+        targetCompatibility javaVersion
+    }
+
+    externalNativeBuild {
+        ndkBuild {
+            path = file('src/main/jni/Android.mk')
+        }
+    }
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
         }
     }
 }
 
+def javadocJar = tasks.register('javadocJar', Jar) {
+    archiveClassifier = 'javadoc'
+}
 
-def repo = new File(rootDir, "repository");
-apply plugin: 'maven'
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = libraryGroupId
+                artifactId = libraryArtifactId
+                version = libraryVersion
+                artifact javadocJar
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository url: "file://${repo.absolutePath}"
-            pom.version = "1.1.6"
-            pom.groupId = "io.wf9a5m75"
-            pom.artifactId = "redis-android"
+                pom {
+                    name = libraryProperty('libraryName')
+                    description = libraryProperty('libraryDescription')
+                    url = libraryProperty('libraryUrl')
+
+                    licenses {
+                        license {
+                            name = libraryProperty('libraryLicenseName')
+                            url = libraryProperty('libraryLicenseUrl')
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = libraryProperty('developerId')
+                            name = libraryProperty('developerName')
+                            email = libraryProperty('developerEmail')
+                        }
+                    }
+
+                    scm {
+                        connection = libraryProperty('scmConnection')
+                        developerConnection = libraryProperty('scmDeveloperConnection')
+                        url = libraryProperty('scmUrl')
+                    }
+                }
+            }
         }
+        repositories {
+            maven {
+                name = 'ProjectRepository'
+                url = uri(new File(rootDir, "repository"))
+            }
+            maven {
+                name = 'GitHubPackages'
+                url = uri(libraryProperty('githubPackagesUrl'))
+                credentials {
+                    username = findProperty('gpr.user') ?: System.getenv('GPR_USER') ?: System.getenv('GITHUB_ACTOR')
+                    password = findProperty('gpr.key') ?: System.getenv('GPR_TOKEN') ?: System.getenv('GITHUB_TOKEN')
+                }
+            }
+        }
+    }
+}
+
+signing {
+    def signingKey = findProperty('signingKey')
+    def signingPassword = findProperty('signingPassword')
+    if (signingKey && signingPassword) {
+        useInMemoryPgpKeys(signingKey, signingPassword)
+        sign publishing.publications
+    }
+}
+
+nmcp {
+    publishAllPublicationsToCentralPortal {
+        username = findProperty('ossrh_username') ?: System.getenv('OSSRH_USERNAME') ?: ''
+        password = findProperty('ossrh_password') ?: System.getenv('OSSRH_PASSWORD') ?: ''
+        publishingType = 'USER_MANAGED'
     }
 }

@@ -1,26 +1,53 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    namespace = 'example.redis.android.wf9a5m75.exampleapp'
+    compileSdk = 37
+
     defaultConfig {
-        applicationId "example.redis.android.wf9a5m75.exampleapp"
-        minSdkVersion 17
-        targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        applicationId = "example.redis.android.wf9a5m75.exampleapp"
+        minSdk = 21
+        targetSdk = 37
+        versionCode = 1
+        versionName = "1.0"
     }
+
+    flavorDimensions += "dependencySource"
+    productFlavors {
+        app {
+            dimension = "dependencySource"
+        }
+        appWithMaven {
+            dimension = "dependencySource"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
 
+
+def libraryProperties = new Properties()
+file('../redis-android/gradle.properties').withInputStream { libraryProperties.load(it) }
+def libraryProperty = { String name ->
+    def override = findProperty(name)
+    override != null ? override.toString() : libraryProperties.getProperty(name)
+}
+def libraryGroupId = libraryProperty('libraryGroupId')
+def libraryArtifactId = libraryProperty('libraryArtifactId')
+def libraryVersion = libraryProperty('libraryVersion')
+
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation project(path: ':redis-android')
+    appImplementation fileTree(include: ['*.jar'], dir: 'libs')
+    appImplementation project(':redis-android')
+    appWithMavenImplementation("${libraryGroupId}:${libraryArtifactId}:${libraryVersion}")
 }
