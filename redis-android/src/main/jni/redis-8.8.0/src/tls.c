@@ -1260,7 +1260,11 @@ int RedisRegisterConnectionTypeTLS(void) {
 
 #if BUILD_TLS_MODULE == 2 /* BUILD_MODULE */
 
+#ifdef __REDIS_ANDROID__
+#include "redis-android-release.h"
+#else
 #include "release.h"
+#endif
 
 int RedisModule_OnLoad(void *ctx, RedisModuleString **argv, int argc) {
     UNUSED(argv);

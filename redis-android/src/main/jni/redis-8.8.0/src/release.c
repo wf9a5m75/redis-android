@@ -14,7 +14,11 @@
 #include <string.h>
 #include <stdio.h>
 
+#ifdef __REDIS_ANDROID__
+#include "redis-android-release.h"
+#else
 #include "release.h"
+#endif
 #include "crc64.h"
 
 char *redisGitSHA1(void) {
