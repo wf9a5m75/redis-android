@@ -1,23 +1,27 @@
 buildscript {
     repositories {
-        mavenCentral()
         google()
+        mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.1'
+        classpath 'com.android.tools.build:gradle:9.2.1'
     }
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
 
 android {
-    compileSdkVersion 16
-    buildToolsVersion '28.0.3'
+    namespace = 'io.wf9a5m75.redis'
+    compileSdk = 37
 
     defaultConfig {
-        minSdkVersion 16
-        versionCode 1
-        versionName "1.0"
+        minSdk = 16
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     sourceSets {
@@ -26,19 +30,26 @@ android {
             jniLibs.srcDir "src/main/libs"
         }
     }
+
+    publishing {
+        singleVariant('release')
+    }
 }
 
-
-def repo = new File(rootDir, "repository");
-apply plugin: 'maven'
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository url: "file://${repo.absolutePath}"
-            pom.version = "1.1.6"
-            pom.groupId = "io.wf9a5m75"
-            pom.artifactId = "redis-android"
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = "io.wf9a5m75"
+                artifactId = "redis-android"
+                version = "1.1.6"
+            }
+        }
+        repositories {
+            maven {
+                url = uri(new File(rootDir, "repository"))
+            }
         }
     }
 }
