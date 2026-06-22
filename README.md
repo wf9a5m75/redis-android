@@ -2,6 +2,8 @@
 
 Redis server embedded as an Android library.
 
+![](images/playing.gif)
+
 ## Versions
 
 - redis-android: 1.2.0
