@@ -40,10 +40,18 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
-      - name: Install Android NDK $NDK_VERSION
-        uses: android-actions/setup-android@v3
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
         with:
-          packages: "build-tools;37.0.0 ndk;${{ env.NDK_VERSION }} platform-tools platforms;android-37"
+          packages: ''
+
+      - name: Install Android SDK packages
+        run: |
+          sdkmanager \
+            "platform-tools" \
+            "platforms;android-37" \
+            "build-tools;37.0.0" \
+            "ndk;${NDK_VERSION}"
 
       - name: Submit deployment to Maven Central
         env:

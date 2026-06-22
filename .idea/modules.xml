@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/redis-android-root.iml" filepath="$PROJECT_DIR$/.idea/modules/redis-android-root.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/redis-android-root.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/redis-android-root.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/redis-android-root.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/redis-android-root.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/redis-android-root.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/redis-android-root.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/redis-android-root.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/redis-android-root.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/redis-android/redis-android-root.redis-android.iml" filepath="$PROJECT_DIR$/.idea/modules/redis-android/redis-android-root.redis-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/redis-android/redis-android-root.redis-android.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/redis-android/redis-android-root.redis-android.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/redis-android/redis-android-root.redis-android.main.iml" filepath="$PROJECT_DIR$/.idea/modules/redis-android/redis-android-root.redis-android.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/redis-android/redis-android-root.redis-android.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/redis-android/redis-android-root.redis-android.unitTest.iml" />
+    </modules>
+  </component>
+</project>
