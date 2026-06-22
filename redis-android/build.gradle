@@ -10,18 +10,58 @@ buildscript {
 
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
+apply plugin: 'signing'
+apply plugin: 'com.gradleup.nmcp'
+
+def libraryProperties = new Properties()
+file('gradle.properties').withInputStream { libraryProperties.load(it) }
+def libraryProperty = { String name ->
+    def override = findProperty(name)
+    override != null ? override.toString() : libraryProperties.getProperty(name)
+}
+def libraryGroupId = libraryProperty('libraryGroupId')
+def libraryArtifactId = libraryProperty('libraryArtifactId')
+def libraryVersion = libraryProperty('libraryVersion')
+def androidNdkVersion = rootProject.findProperty('android.ndkVersion') ?: '30.0.14904198'
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withInputStream { localProperties.load(it) }
+}
+
+def androidNdkDirectory = providers.provider {
+    def configuredNdkRoot = System.getenv('ANDROID_NDK_ROOT') ?: System.getenv('ANDROID_NDK_HOME')
+    if (configuredNdkRoot) {
+        return file(configuredNdkRoot)
+    }
+
+    def sdkDirectory = localProperties.getProperty('sdk.dir') ?:
+        System.getenv('ANDROID_SDK_ROOT') ?:
+        System.getenv('ANDROID_HOME')
+    if (!sdkDirectory) {
+        throw new GradleException(
+            'Android SDK not found. Set sdk.dir in local.properties or ANDROID_SDK_ROOT.'
+        )
+    }
+    return file("${sdkDirectory}/ndk/${androidNdkVersion}")
+}
+
+group = libraryGroupId
+version = libraryVersion
 
 android {
-    namespace = 'io.wf9a5m75.redis'
-    compileSdk = 37
+    namespace = 'io.github.wf9a5m75'
+    compileSdk = libraryProperty('compileSdk').toInteger()
 
     defaultConfig {
-        minSdk = 16
+        minSdk = libraryProperty('minSdk').toInteger()
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        def javaVersion = JavaVersion.toVersion(libraryProperty('javaVersion'))
+        sourceCompatibility javaVersion
+        targetCompatibility javaVersion
     }
 
     sourceSets {
@@ -32,8 +72,39 @@ android {
     }
 
     publishing {
-        singleVariant('release')
+        singleVariant('release') {
+            withSourcesJar()
+        }
     }
+}
+
+def buildNativeLibraries = tasks.register('buildNativeLibraries', Exec) {
+    def jniDirectory = file('src/main/jni')
+    inputs.dir(jniDirectory)
+    outputs.dir(file('src/main/libs'))
+
+    doFirst {
+        def ndkBuild = new File(androidNdkDirectory.get(), 'ndk-build')
+        if (!ndkBuild.isFile()) {
+            throw new GradleException("ndk-build not found: ${ndkBuild}")
+        }
+        commandLine(
+            ndkBuild.absolutePath,
+            'NDK_PROJECT_PATH=src/main',
+            'APP_BUILD_SCRIPT=src/main/jni/Android.mk',
+            'NDK_APPLICATION_MK=src/main/jni/Application.mk'
+        )
+    }
+}
+
+tasks.configureEach {
+    if (name == 'mergeDebugJniLibFolders' || name == 'mergeReleaseJniLibFolders') {
+        dependsOn buildNativeLibraries
+    }
+}
+
+def javadocJar = tasks.register('javadocJar', Jar) {
+    archiveClassifier = 'javadoc'
 }
 
 afterEvaluate {
@@ -41,15 +112,69 @@ afterEvaluate {
         publications {
             release(MavenPublication) {
                 from components.release
-                groupId = "io.wf9a5m75"
-                artifactId = "redis-android"
-                version = "1.1.6"
+                groupId = libraryGroupId
+                artifactId = libraryArtifactId
+                version = libraryVersion
+                artifact javadocJar
+
+                pom {
+                    name = libraryProperty('libraryName')
+                    description = libraryProperty('libraryDescription')
+                    url = libraryProperty('libraryUrl')
+
+                    licenses {
+                        license {
+                            name = libraryProperty('libraryLicenseName')
+                            url = libraryProperty('libraryLicenseUrl')
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = libraryProperty('developerId')
+                            name = libraryProperty('developerName')
+                            email = libraryProperty('developerEmail')
+                        }
+                    }
+
+                    scm {
+                        connection = libraryProperty('scmConnection')
+                        developerConnection = libraryProperty('scmDeveloperConnection')
+                        url = libraryProperty('scmUrl')
+                    }
+                }
             }
         }
         repositories {
             maven {
+                name = 'ProjectRepository'
                 url = uri(new File(rootDir, "repository"))
             }
+            maven {
+                name = 'GitHubPackages'
+                url = uri(libraryProperty('githubPackagesUrl'))
+                credentials {
+                    username = findProperty('gpr.user') ?: System.getenv('GPR_USER') ?: System.getenv('GITHUB_ACTOR')
+                    password = findProperty('gpr.key') ?: System.getenv('GPR_TOKEN') ?: System.getenv('GITHUB_TOKEN')
+                }
+            }
         }
+    }
+}
+
+signing {
+    def signingKey = findProperty('signingKey')
+    def signingPassword = findProperty('signingPassword')
+    if (signingKey && signingPassword) {
+        useInMemoryPgpKeys(signingKey, signingPassword)
+        sign publishing.publications
+    }
+}
+
+nmcp {
+    publishAllPublicationsToCentralPortal {
+        username = findProperty('ossrh_username') ?: System.getenv('OSSRH_USERNAME') ?: ''
+        password = findProperty('ossrh_password') ?: System.getenv('OSSRH_PASSWORD') ?: ''
+        publishingType = 'USER_MANAGED'
     }
 }

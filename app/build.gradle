@@ -6,10 +6,20 @@ android {
 
     defaultConfig {
         applicationId = "example.redis.android.wf9a5m75.exampleapp"
-        minSdk = 17
+        minSdk = 21
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
+    }
+
+    flavorDimensions += "dependencySource"
+    productFlavors {
+        app {
+            dimension = "dependencySource"
+        }
+        appWithMaven {
+            dimension = "dependencySource"
+        }
     }
 
     compileOptions {
@@ -25,7 +35,19 @@ android {
     }
 }
 
+
+def libraryProperties = new Properties()
+file('../redis-android/gradle.properties').withInputStream { libraryProperties.load(it) }
+def libraryProperty = { String name ->
+    def override = findProperty(name)
+    override != null ? override.toString() : libraryProperties.getProperty(name)
+}
+def libraryGroupId = libraryProperty('libraryGroupId')
+def libraryArtifactId = libraryProperty('libraryArtifactId')
+def libraryVersion = libraryProperty('libraryVersion')
+
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation dependencies.project(':redis-android')
+    appImplementation fileTree(include: ['*.jar'], dir: 'libs')
+    appImplementation project(':redis-android')
+    appWithMavenImplementation("${libraryGroupId}:${libraryArtifactId}:${libraryVersion}")
 }

@@ -1,8 +1,33 @@
 plugins {
     id 'com.android.application' version '9.2.1' apply false
     id 'com.android.library' version '9.2.1' apply false
+    id 'com.gradleup.nmcp' version '1.5.0' apply false
 }
 
 tasks.register('clean', Delete) {
     delete layout.buildDirectory
+}
+
+tasks.register('publishAllLocal') {
+    group = 'publishing'
+    description = 'Publish redis-android to Maven Local'
+    dependsOn ':redis-android:publishToMavenLocal'
+}
+
+tasks.register('publishAllToGitHub') {
+    group = 'publishing'
+    description = 'Publish redis-android to GitHub Packages'
+    dependsOn ':redis-android:publishReleasePublicationToGitHubPackagesRepository'
+}
+
+tasks.register('publishAllToMavenCentral') {
+    group = 'publishing'
+    description = 'Submit redis-android to Maven Central via Central Portal'
+    dependsOn ':redis-android:publishAllPublicationsToCentralPortal'
+}
+
+tasks.register('submitAllToMavenCentral') {
+    group = 'publishing'
+    description = 'Submit redis-android to Maven Central for manual publishing'
+    dependsOn ':redis-android:publishAllPublicationsToCentralPortal'
 }

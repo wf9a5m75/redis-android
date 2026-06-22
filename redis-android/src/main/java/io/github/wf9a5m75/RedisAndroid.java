@@ -1,4 +1,4 @@
-package io.wf9a5m75.redis;
+package io.github.wf9a5m75;
 
 import android.content.Context;
 import android.os.Bundle;

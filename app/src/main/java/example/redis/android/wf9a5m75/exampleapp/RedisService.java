@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
 
-import io.wf9a5m75.redis.RedisAndroid;
+import io.github.wf9a5m75.RedisAndroid;
 
 public class RedisService extends IntentService {
 

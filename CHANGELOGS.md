@@ -1,6 +1,11 @@
 Redis on Android release notes
 ====================================
 
+## Redis on Android 1.2.0
+  - Released Jun/22/2026 JST
+  - Upgraded Redis v8.8.0, Hiredis v1.4.0
+  - Changed the namespace to 'io.github.wf9a5m75'
+
 ## Redis on Android 1.1.2
   - Released Nov/8/2018 PST
   - Bug fix: default value of "dir" setting are incorrect

@@ -1,0 +1,64 @@
+name: Submit to Maven Central
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    env:
+      OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+      OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+      NDK_VERSION: 30.0.14904198
+      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+      ANDROID_HOME: /usr/local/lib/android/sdk
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Write gradle.properties
+        run: |
+          {
+            echo "android.ndkVersion=${NDK_VERSION}"
+          } >> gradle.properties
+
+      - name: Set NDK environment
+        run: |
+          echo "ANDROID_NDK_ROOT=/usr/local/lib/android/sdk/ndk/${NDK_VERSION}" >> $GITHUB_ENV
+          echo "NDK_VERSION=${NDK_VERSION}" >> $GITHUB_ENV
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Install Android NDK $NDK_VERSION
+        uses: android-actions/setup-android@v3
+        with:
+          packages: "build-tools;37.0.0 ndk;${{ env.NDK_VERSION }} platform-tools platforms;android-37"
+
+      - name: Build Redis native libraries
+        run: |
+          "$ANDROID_NDK_ROOT/ndk-build" \
+            NDK_PROJECT_PATH=redis-android/src/main \
+            APP_BUILD_SCRIPT=redis-android/src/main/jni/Android.mk \
+            NDK_APPLICATION_MK=redis-android/src/main/jni/Application.mk
+
+      - name: Submit deployment to Maven Central
+        env:
+          ORG_GRADLE_PROJECT_ossrh_username: ${{ secrets.OSSRH_USERNAME }}
+          ORG_GRADLE_PROJECT_ossrh_password: ${{ secrets.OSSRH_PASSWORD }}
+          GPG_PRIVATE_KEY_BASE64: ${{ secrets.GPG_PRIVATE_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          export ORG_GRADLE_PROJECT_signingKey
+          ORG_GRADLE_PROJECT_signingKey="$(printf '%s' "$GPG_PRIVATE_KEY_BASE64" | base64 --decode)"
+          ./gradlew --no-daemon submitAllToMavenCentral
