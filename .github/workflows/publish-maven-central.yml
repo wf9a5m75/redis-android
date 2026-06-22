@@ -57,9 +57,40 @@ jobs:
         env:
           ORG_GRADLE_PROJECT_ossrh_username: ${{ secrets.OSSRH_USERNAME }}
           ORG_GRADLE_PROJECT_ossrh_password: ${{ secrets.OSSRH_PASSWORD }}
-          GPG_PRIVATE_KEY_BASE64: ${{ secrets.GPG_PRIVATE_KEY }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_PRIVATE_KEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASSPHRASE }}
         run: |
-          export ORG_GRADLE_PROJECT_signingKey
-          ORG_GRADLE_PROJECT_signingKey="$(printf '%s' "$GPG_PRIVATE_KEY_BASE64" | base64 --decode)"
+          set +e
+          set -uo pipefail
+
+          GROUP_ID="com.mapconductor"
+          GROUP_PATH="${GROUP_ID//./\/}"
+          ARTIFACT_ID="marker-clustering"
+
+          local_version=$(grep '^libraryVersion=' gradle.properties | cut -d'=' -f2 | tr -d '\r')
+          if [[ -z "$local_version" ]]; then
+            echo "ERROR: Could not read libraryVersion from gradle.properties"
+            exit 1
+          fi
+
+          metadata_url="https://repo1.maven.org/maven2/${GROUP_PATH}/${ARTIFACT_ID}/maven-metadata.xml"
+          echo "Checking ${GROUP_ID}:${ARTIFACT_ID} (local version ${local_version})"
+
+          remote_version=""
+          if curl -fsSL "$metadata_url" -o metadata.xml; then
+            remote_version=$(grep '<release>' metadata.xml | head -n1 | sed -E 's/.*<release>([^<]+)<\/release>.*/\1/' || true)
+            if [[ -z "$remote_version" ]]; then
+              remote_version=$(grep '<version>' metadata.xml | sed -E 's/.*<version>([^<]+)<\/version>.*/\1/' | tail -n1 || true)
+            fi
+            rm -f metadata.xml
+          else
+            echo "  No metadata found on Maven Central (not published yet)."
+          fi
+
+          if [[ -n "$remote_version" && "$local_version" == "$remote_version" ]]; then
+            echo "  Already published (remote version ${remote_version}); skipping."
+            exit 0
+          fi
+
+          echo "  Will publish local version ${local_version} (remote='${remote_version}')."
           ./gradlew --no-daemon submitAllToMavenCentral

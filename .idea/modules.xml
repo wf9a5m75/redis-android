@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/redis-android-root.iml" filepath="$PROJECT_DIR$/.idea/modules/redis-android-root.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/redis-android-root.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/redis-android-root.app.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/redis-android-root.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/redis-android-root.app.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/redis-android-root.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/redis-android-root.app.main.iml" />
