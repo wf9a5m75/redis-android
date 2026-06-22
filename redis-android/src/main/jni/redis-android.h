@@ -6,8 +6,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <malloc.h>
+#include <pthread.h>
 #include <android/log.h>
-#include "redis-android.h"
 #define DEBUG_TAG "redis-android"
 
 extern pthread_t exitThread;

@@ -1,3 +1,0 @@
-#define SYNC_FILE_RANGE_WAIT_BEFORE     1
-#define SYNC_FILE_RANGE_WRITE           2
-#define SYNC_FILE_RANGE_WAIT_AFTER      4
