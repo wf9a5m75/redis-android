@@ -8,6 +8,12 @@ tasks.register('clean', Delete) {
     delete layout.buildDirectory
 }
 
+tasks.register('buildNative') {
+    group = 'build'
+    description = 'Build Redis native libraries for all Android ABIs'
+    dependsOn ':redis-android:externalNativeBuildRelease'
+}
+
 tasks.register('publishAllLocal') {
     group = 'publishing'
     description = 'Publish redis-android to Maven Local'

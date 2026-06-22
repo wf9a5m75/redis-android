@@ -128,17 +128,13 @@ Android binaries for `redis-cli`, `redis-check-aof`, or `redis-check-rdb`.
 Install Android SDK Platform 37 and Android NDK `30.0.14904198`, then run:
 
 ```bash
-$ANDROID_NDK_ROOT/ndk-build \
-  NDK_PROJECT_PATH=redis-android/src/main \
-  APP_BUILD_SCRIPT=redis-android/src/main/jni/Android.mk \
-  NDK_APPLICATION_MK=redis-android/src/main/jni/Application.mk
-
+./gradlew buildNative
 ./gradlew assembleDebug
 ```
 
-Native outputs under `redis-android/src/main/libs` are generated files and are not
-stored in Git. The Maven Central GitHub Actions workflow builds them before creating
-and submitting the AAR.
+The Android Gradle Plugin runs `ndk-build` through `externalNativeBuild`. Native
+outputs are stored in Gradle build directories and packaged into the AAR
+automatically. Publishing tasks also build the native libraries before publishing.
 
 ## Publishing
 
