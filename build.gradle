@@ -4,6 +4,26 @@ plugins {
     id 'com.gradleup.nmcp' version '1.5.0' apply false
 }
 
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    def localProperties = new Properties()
+    localPropertiesFile.withInputStream { localProperties.load(it) }
+
+    localProperties.each { key, value ->
+        if (!extensions.extraProperties.has(key.toString())) {
+            extensions.extraProperties.set(key.toString(), value)
+        }
+    }
+
+    subprojects {
+        localProperties.each { key, value ->
+            if (!extensions.extraProperties.has(key.toString())) {
+                extensions.extraProperties.set(key.toString(), value)
+            }
+        }
+    }
+}
+
 tasks.register('clean', Delete) {
     delete layout.buildDirectory
 }
